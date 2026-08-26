@@ -23,7 +23,7 @@ public class Echo {
     public static void printList() {
         // Display all the contents inside the list
         for (int i = 0; i < numberOfTasks; ++i) {
-            System.out.println(i + 1 + ". " + tasks[i].getDescription());
+            System.out.println(i + 1 + ". " + tasks[i].displayCheckbox() + " " + tasks[i].getDescription());
         }
         System.out.println(divider);
     }
@@ -33,16 +33,41 @@ public class Echo {
         System.out.println(divider);
     }
 
-    public static void handleInputCommands(String input) {
-        String inputCommand = input.trim().toLowerCase();
+    public static void markTask(int itemIndex) {
+        tasks[itemIndex].setIsDone(true);
+        System.out.println("Nice! I've marked this task as done:");
+        System.out.println(tasks[itemIndex].displayCheckbox() + " " + tasks[itemIndex].getDescription());
+        System.out.println(divider);
+    }
 
-        switch (inputCommand) {
+    public static void unmarkTask(int itemIndex) {
+        tasks[itemIndex].setIsDone(false);
+        System.out.println("Okay, I've marked this task as not done yet:");
+        System.out.println(tasks[itemIndex].displayCheckbox() + " " + tasks[itemIndex].getDescription());
+        System.out.println(divider);
+    }
+
+    public static void handleInputCommands(String input) {
+        String[] inputCommands = input.split(" ");
+        int itemIndex;
+
+        switch (inputCommands[0].trim().toLowerCase()) {
             case "bye":
                 endChatbot();
                 break;
             case "list":
                 printList();
                 break;
+            case "mark":
+                itemIndex = Integer.parseInt(inputCommands[1]) - 1;
+                markTask(itemIndex);
+                break;
+            case "unmark":
+                itemIndex = Integer.parseInt(inputCommands[1]) - 1;
+                unmarkTask(itemIndex);
+                break;
+            default:
+                addTask(input);
         }
     }
 
@@ -53,8 +78,6 @@ public class Echo {
             // Read input
             line = in.nextLine();
 
-            // Add task based on input description
-            addTask(line);
             handleInputCommands(line);
 
         } while (!line.equals("bye"));

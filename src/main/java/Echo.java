@@ -4,39 +4,59 @@ public class Echo {
 
     static final String divider = "_____________________________________";
     static final String chatbotTag = "[Lokwx]";
+    static final String closingMessage = chatbotTag + " " + "Bye. Hope to see you again soon!";
 
-    private static String[] inputList = new String[100];
-    private static int inputListIndex = 0;
-    
-    
+    private static Task[] tasks = new Task[100];
+    private static int numberOfTasks = 0;
+
+    public static void addTask(String description) {
+        // Create an array of Task objects
+        if (!description.equalsIgnoreCase("bye") && !description.equalsIgnoreCase("list")) {
+            tasks[numberOfTasks++] = new Task(description);
+
+            System.out.println(chatbotTag + " " + "added: " + description);
+            System.out.println(divider);
+        }
+
+    }
+
+    public static void printList() {
+        // Display all the contents inside the list
+        for (int i = 0; i < numberOfTasks; ++i) {
+            System.out.println(i + 1 + ". " + tasks[i].getDescription());
+        }
+        System.out.println(divider);
+    }
+
+    public static void endChatbot() {
+        System.out.println(closingMessage);
+        System.out.println(divider);
+    }
+
+    public static void handleInputCommands(String input) {
+        String inputCommand = input.trim().toLowerCase();
+
+        switch (inputCommand) {
+            case "bye":
+                endChatbot();
+                break;
+            case "list":
+                printList();
+                break;
+        }
+    }
+
     public static void echoCommands(Scanner in) {
         String line;
 
         do {
+            // Read input
             line = in.nextLine();
 
-            if (!line.equalsIgnoreCase("bye") && !line.equalsIgnoreCase("list")) {
-                inputList[inputListIndex++] = line;
-            }
+            // Add task based on input description
+            addTask(line);
+            handleInputCommands(line);
 
-            System.out.println(divider);
-
-            //Displays the closing message if bye is inputted
-            if (line.equalsIgnoreCase("bye")) {
-                System.out.println(chatbotTag + " " + "Bye. Hope to see you again soon!");
-            }
-            else if (line.equalsIgnoreCase("list")) {
-             
-                //Display all the contents inside the list
-                for (int i = 0; i < inputListIndex; ++i) {
-                    System.out.println(i+1 + ". " + inputList[i]);
-                }
-            }
-            else {
-                System.out.println(chatbotTag + " " + "added: " + line);
-            }
-
-            System.out.println(divider);
         } while (!line.equals("bye"));
     }
 }

@@ -1,10 +1,16 @@
-/**
- * Entry point for the Lokwx chatbot.
- */
+package lokwx;
 
 import java.util.Scanner;
 
+/**
+ * Starts the Lokwx chatbot and accepts commands from the user.
+ */
 public class Lokwx {
+    /**
+     * Starts a Lokwx chatbot session.
+     *
+     * @param args Command-line arguments, which are not used.
+     */
     public static void main(String[] args) {
         System.out.println("_____________________________________");
         String banner = """
@@ -20,10 +26,7 @@ public class Lokwx {
         System.out.println("What can I do for you?");
         System.out.println("______________________________________");
 
-        //Create the new scanner to read inputs
-        Scanner in = new Scanner(System.in);
-        
-        //Level-1 implementation
-        Echo.echoCommands(in);
+        Scanner inputScanner = new Scanner(System.in);
+        Echo.echoCommands(inputScanner);
     }
 }

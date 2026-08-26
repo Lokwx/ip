@@ -36,6 +36,10 @@ All Java code in the project must comply with that standard.
 
 ## Git
 
+Before proposing, creating, amending, or squashing any commit in this project, you MUST use and follow the
+`seedu-git-standard` skill at `.agents/skills/seedu-git-standard/SKILL.md`. All future commits must comply with that
+standard. Follow the same skill whenever naming or creating a branch.
+
 Use lightweight tags unless the user requests an annotated tag.
 When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.

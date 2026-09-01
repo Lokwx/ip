@@ -10,13 +10,10 @@ public class TaskHandler {
     /**
      * Adds a task with the specified description and displays a confirmation.
      *
-     * @param description Description of the task to add.
      */
-    public void addTask(String description) {
-        if (!description.equalsIgnoreCase("bye") && !description.equalsIgnoreCase("list")) {
-            tasks[numberOfTasks++] = new Task(description);
-            Echo.printAddedTask(description);
-        }
+    public void addTask(Task task) {
+        tasks[numberOfTasks++] = task;
+        Echo.printAddedTask(task.getDescription());
     }
 
     /**

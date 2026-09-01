@@ -34,6 +34,14 @@ For every Java code change or review in this project, you MUST use and follow th
 `seedu-java-coding-standard` skill at `.agents/skills/seedu-java-coding-standard/SKILL.md`.
 All Java code in the project must comply with that standard.
 
+## UI testing
+
+After every code update in this project, you MUST:
+
+1. Review `test/ui-test-plan.md` and update it when the changed behavior, setup, or required coverage is not represented accurately. Leave it unchanged when the existing plan remains accurate.
+2. Invoke and follow the `test-ui` skill at `.agents/skills/test-ui/SKILL.md` after the test plan is current.
+3. Do not report the code update as complete until the skill has finished. If testing cannot run or stops at a failure, report that outcome and do not claim that the UI tests passed.
+
 ## Git
 
 Before proposing, creating, amending, or squashing any commit in this project, you MUST use and follow the

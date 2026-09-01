@@ -4,6 +4,15 @@ package lokwx;
  * Represents a task tracked by the Lokwx chatbot.
  */
 public class Task {
+
+    public enum TaskType {
+        TASK,
+        TODO,
+        DEADLINE,
+        EVENT
+    }
+
+    private TaskType taskType;
     private String description;
     private boolean isDone;
 
@@ -12,8 +21,9 @@ public class Task {
      *
      * @param description Description of the task.
      */
-    public Task(String description) {
+    public Task(String description, TaskType taskType) {
         this.description = description;
+        this.taskType = taskType;
         this.isDone = false;
     }
 
@@ -33,6 +43,14 @@ public class Task {
         return isDone;
     }
 
+    public TaskType getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(TaskType taskType) {
+        this.taskType = taskType;
+    }
+
     /**
      * Returns a checkbox that indicates whether this task is done.
      *
@@ -41,4 +59,6 @@ public class Task {
     public String displayCheckbox() {
         return "[" + (isDone ? "X" : " ") + "]";
     }
+
+
 }

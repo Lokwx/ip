@@ -6,8 +6,8 @@ package lokwx;
 public class Deadline extends Task {
     private String deadlineBy;
 
-    public Deadline(String description, String deadlineBy) {
-        super(description);
+    public Deadline(String description, String deadlineBy, TaskType taskType) {
+        super(description, taskType);
         this.deadlineBy = deadlineBy;
     }
 

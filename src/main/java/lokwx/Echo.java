@@ -34,9 +34,8 @@ public class Echo {
      *
      * @param description Description of the added task.
      */
-    public static void printAddedTask(String description) {
-        System.out.println(CHATBOT_TAG + " added: " + description);
-        System.out.println(DIVIDER);
+    public static void printAddedTask(Task task) {
+
     }
 
     /**

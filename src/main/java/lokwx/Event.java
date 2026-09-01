@@ -6,8 +6,8 @@ package lokwx;
 public class Event extends Task {
     private String eventFrom, eventTo;
 
-    public Event(String description, String eventFrom, String eventTo) {
-        super(description);
+    public Event(String description, String eventFrom, String eventTo, TaskType taskType) {
+        super(description, taskType);
         this.eventFrom = eventFrom;
         this.eventTo = eventTo;
     }

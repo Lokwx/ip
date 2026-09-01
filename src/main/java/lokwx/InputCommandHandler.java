@@ -31,7 +31,7 @@ public class InputCommandHandler {
             }
             case "todo" -> {
                 String description = input.substring("todo".length()).trim();
-                Todo todo = new Todo(description);
+                Todo todo = new Todo(description, Task.TaskType.TODO);
                 taskHandler.addTask(todo);
             }
             case "deadline" -> {
@@ -40,7 +40,7 @@ public class InputCommandHandler {
                 String description = input.substring("deadline".length(), byIndex).trim();
                 String deadlineBy = input.substring(byIndex + BY_DELIMITER.length()).trim();
 
-                Deadline deadline = new Deadline(description, deadlineBy);
+                Deadline deadline = new Deadline(description, deadlineBy, Task.TaskType.DEADLINE);
                 taskHandler.addTask(deadline);
             }
             case "event" -> {
@@ -51,12 +51,12 @@ public class InputCommandHandler {
                 String eventFrom = input.substring(fromIndex + FROM_DELIMITER.length(), toIndex).trim();
                 String eventTo = input.substring(toIndex + TO_DELIMITER.length()).trim();
 
-                Event event = new Event(description, eventFrom, eventTo);
+                Event event = new Event(description, eventFrom, eventTo, Task.TaskType.EVENT);
                 taskHandler.addTask(event);
             }
             default -> {
                 String description = input;
-                Task task = new Task(input);
+                Task task = new Task(input, Task.TaskType.TASK);
                 taskHandler.addTask(task);
             }
         }

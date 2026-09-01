@@ -14,7 +14,7 @@ public class Lokwx {
     public static void main(String[] args) {
         System.out.println("_____________________________________");
         String banner = """
-                 _           _                   \s
+                 _           _                  \s
                 | |         | |                  \s
                 | |     ___ | | ____      ____  __
                 | |    / _ \\| |/ /\\ \\ /\\ / /\\ \\/ /
@@ -26,7 +26,13 @@ public class Lokwx {
         System.out.println("What can I do for you?");
         System.out.println("______________________________________");
 
+        TaskHandler taskHandler = new TaskHandler();
         Scanner inputScanner = new Scanner(System.in);
-        Echo.echoCommands(inputScanner);
+        String line;
+
+        do {
+            line = inputScanner.nextLine();
+            InputCommandHandler.handleInputCommands(line, taskHandler);
+        } while (!line.trim().equalsIgnoreCase("bye"));
     }
 }

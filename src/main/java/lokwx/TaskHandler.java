@@ -5,11 +5,12 @@ package lokwx;
  */
 public class TaskHandler {
     private final Task[] tasks = new Task[100];
-    private static int numberOfTasks = 0;
+    private int numberOfTasks = 0;
 
     /**
      * Adds a task with the specified description and displays a confirmation.
      *
+     * @param task Task to add.
      */
     public void addTask(Task task) {
         tasks[numberOfTasks++] = task;
@@ -43,7 +44,7 @@ public class TaskHandler {
         Echo.printList(tasks, numberOfTasks);
     }
 
-    public static int getNumberOfTasks() {
+    public int getNumberOfTasks() {
         return numberOfTasks;
     }
 }

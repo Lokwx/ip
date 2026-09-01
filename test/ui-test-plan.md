@@ -4,35 +4,102 @@
 
 - Working directory: repository root
 - Required Java version: 25
-- Build and launch command: `bash run.sh`
+- Build command: `javac -d bin src/main/java/lokwx/*.java`
+- Launch command: `java -cp bin lokwx.Lokwx`
 - Shutdown command: `bye`
 - Comparison rule: Normalize line endings to LF, then compare exactly without trimming.
 - Session rule: Use a fresh Lokwx process for each complete test run unless a test case explicitly requires a different setup.
 
 ## Test cases
 
-No test cases have been recorded yet. Add each test case using the format below before running it.
+### UI-01: Add and list multiple tasks
 
-<!--
-### UI-01: Short descriptive name
+**Aim:** Verify that a session counts added tasks correctly and lists each task in insertion order.
 
-**Aim:** Explain the behavior this test verifies.
-
-**Setup:** Describe any required starting state, or write "Fresh application session."
+**Setup:** Fresh application session.
 
 #### Check 1
 
 **Input command**
 
 ```text
-command entered by the user
+todo read book
 ```
 
 **Expected output**
 
 ```text
-exact output produced in response to that command
+
+Got it. I've added this Todo:
+[T][ ] read book
+Now you have 1 task in this list.
+
+   ^^^^^
+ \.[^_^]./
+    |o|
+__________________________________________________
 ```
 
-Add Check 2, Check 3, and so on when this test case needs more commands.
--->
+#### Check 2
+
+**Input command**
+
+```text
+todo submit assignment
+```
+
+**Expected output**
+
+```text
+
+Got it. I've added this Todo:
+[T][ ] submit assignment
+Now you have 2 tasks in this list.
+
+   ^^^^^
+ \.[^_^]./
+    |o|
+__________________________________________________
+```
+
+#### Check 3
+
+**Input command**
+
+```text
+list
+```
+
+**Expected output**
+
+```text
+
+1. [T][ ] read book
+2. [T][ ] submit assignment
+
+  ?????
+ .[o_o].
+  /|o|\
+__________________________________________________
+```
+
+#### Check 4
+
+**Input command**
+
+```text
+bye
+```
+
+**Expected output**
+
+```text
+
+Bye. Hope to see you again soon!
+
+    o
+   / \
+ .[^_^]./
+  /|o|
+__________________________________________________
+```

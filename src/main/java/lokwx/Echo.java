@@ -4,9 +4,7 @@ package lokwx;
  * Handles formatting and printing chatbot output to the console.
  */
 public class Echo {
-    public static final String DIVIDER = "_____________________________________";
-    public static final String CHATBOT_TAG = "[Lokwx]";
-    public static final String CLOSING_MESSAGE = CHATBOT_TAG + " Bye. Hope to see you again soon!";
+    public static final String DIVIDER = "__________________________________________________";
 
     /**
      * Prints all tasks in the list.
@@ -19,7 +17,19 @@ public class Echo {
         for (int i = 0; i < numberOfTasks; i++) {
             System.out.printf("%d. %s\n",i+1,tasks[i].displayTask());
         }
+        printRobot(Robot.ROBOT_LIST);
+    }
+
+    public static void printRobot(String robot) {
+        System.out.println();
+        System.out.println(robot);
         System.out.println(DIVIDER);
+    }
+
+    public static void startChatBot() {
+        System.out.println("Hello! I'm Lokwx.");
+        System.out.println("What can I do for you?");
+        printRobot(Robot.ROBOT_HAPPY);
     }
 
     /**
@@ -27,15 +37,15 @@ public class Echo {
      */
     public static void endChatbot() {
         System.out.println();
-        System.out.println(CLOSING_MESSAGE);
-        System.out.println(DIVIDER);
+        System.out.println("Bye. Hope to see you again soon!");
+        printRobot(Robot.ROBOT_BYE);
     }
 
     public static void taskAdded(Task task, int numberOfTasks) {
         System.out.println();
         System.out.print(task.taskAddedString());
         System.out.printf("Now you have %d %s in this list.\n", numberOfTasks, numberOfTasks > 1 ? "tasks" : "task");
-        System.out.println(DIVIDER);
+        printRobot(Robot.ROBOT_EXCITED);
     }
 
     /**
@@ -47,7 +57,7 @@ public class Echo {
         System.out.println();
         System.out.println("Nice! I've marked this task as done:");
         System.out.printf("%s %s\n",task.displayCheckbox(),task.getDescription());
-        System.out.println(DIVIDER);
+        printRobot(Robot.ROBOT_DONE);
     }
 
     /**
@@ -59,6 +69,6 @@ public class Echo {
         System.out.println();
         System.out.println("Okay, I've marked this task as not done yet:");
         System.out.printf("%s %s\n",task.displayCheckbox(),task.getDescription());
-        System.out.println(DIVIDER);
+        printRobot(Robot.ROBOT_SAD);
     }
 }

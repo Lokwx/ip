@@ -5,7 +5,10 @@ import java.util.Scanner;
 /**
  * Starts the Lokwx chatbot and accepts commands from the user.
  */
-public class Lokwx {
+public final class Lokwx {
+    private Lokwx() {
+    }
+
     /**
      * Starts a Lokwx chatbot session.
      *
@@ -24,9 +27,7 @@ public class Lokwx {
             """;
         System.out.println(banner);
         System.out.println(Echo.DIVIDER);
-        Echo.startChatBot();
-
-
+        Echo.startChatbot();
 
         TaskHandler taskHandler = new TaskHandler();
         Scanner inputScanner = new Scanner(System.in);
@@ -34,7 +35,7 @@ public class Lokwx {
 
         do {
             line = inputScanner.nextLine();
-            InputCommandHandler.handleInputCommands(line, taskHandler);
+            InputCommandHandler.handleInputCommand(line, taskHandler);
         } while (!line.trim().equalsIgnoreCase("bye"));
     }
 }

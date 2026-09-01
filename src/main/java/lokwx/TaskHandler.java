@@ -4,17 +4,19 @@ package lokwx;
  * Manages the collection of tasks and performs operations on them.
  */
 public class TaskHandler {
-    private final Task[] tasks = new Task[100];
+    private static final int MAX_TASKS = 100;
+
+    private final Task[] tasks = new Task[MAX_TASKS];
     private int numberOfTasks = 0;
 
     /**
-     * Adds a task with the specified description and displays a confirmation.
+     * Adds the specified task and displays a confirmation.
      *
      * @param task Task to add.
      */
     public void addTask(Task task) {
         tasks[numberOfTasks++] = task;
-        Echo.taskAdded(task, numberOfTasks);
+        Echo.printTaskAddedConfirmation(task, numberOfTasks);
     }
 
     /**

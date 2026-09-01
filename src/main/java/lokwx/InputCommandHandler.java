@@ -3,11 +3,14 @@ package lokwx;
 /**
  * Parses user input and routes to the appropriate task and echo actions.
  */
-public class InputCommandHandler {
+public final class InputCommandHandler {
 
-    public static final String BY_DELIMITER = "/by";
-    public static final String FROM_DELIMITER = "/from";
-    public static final String TO_DELIMITER = "/to";
+    private static final String DELIMITER_BY = "/by";
+    private static final String DELIMITER_FROM = "/from";
+    private static final String DELIMITER_TO = "/to";
+
+    private InputCommandHandler() {
+    }
 
     /**
      * Processes one line of user input as a chatbot command.
@@ -15,7 +18,7 @@ public class InputCommandHandler {
      * @param input User input to process.
      * @param taskHandler Task handler that holds the current tasks.
      */
-    public static void handleInputCommands(String input, TaskHandler taskHandler) {
+    public static void handleInputCommand(String input, TaskHandler taskHandler) {
         String[] inputCommands = input.split(" ");
 
         switch (inputCommands[0].trim().toLowerCase()) {
@@ -35,27 +38,26 @@ public class InputCommandHandler {
                 taskHandler.addTask(todo);
             }
             case "deadline" -> {
-                int byIndex = input.indexOf(BY_DELIMITER);
+                int byIndex = input.indexOf(DELIMITER_BY);
 
                 String description = input.substring("deadline".length(), byIndex).trim();
-                String deadlineBy = input.substring(byIndex + BY_DELIMITER.length()).trim();
+                String deadlineBy = input.substring(byIndex + DELIMITER_BY.length()).trim();
 
                 Deadline deadline = new Deadline(description, deadlineBy, Task.TaskType.DEADLINE);
                 taskHandler.addTask(deadline);
             }
             case "event" -> {
-                int fromIndex = input.indexOf(FROM_DELIMITER);
-                int toIndex = input.indexOf(TO_DELIMITER);
+                int fromIndex = input.indexOf(DELIMITER_FROM);
+                int toIndex = input.indexOf(DELIMITER_TO);
 
                 String description = input.substring("event".length(), fromIndex).trim();
-                String eventFrom = input.substring(fromIndex + FROM_DELIMITER.length(), toIndex).trim();
-                String eventTo = input.substring(toIndex + TO_DELIMITER.length()).trim();
+                String eventFrom = input.substring(fromIndex + DELIMITER_FROM.length(), toIndex).trim();
+                String eventTo = input.substring(toIndex + DELIMITER_TO.length()).trim();
 
                 Event event = new Event(description, eventFrom, eventTo, Task.TaskType.EVENT);
                 taskHandler.addTask(event);
             }
             default -> {
-                String description = input;
                 Task task = new Task(input, Task.TaskType.TASK);
                 taskHandler.addTask(task);
             }

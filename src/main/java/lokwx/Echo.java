@@ -1,38 +1,22 @@
 package lokwx;
 
-import java.util.Scanner;
-
 /**
- * Processes chatbot commands and displays responses to the user.
+ * Handles formatting and printing chatbot output to the console.
  */
 public class Echo {
-    private static final String DIVIDER = "_____________________________________";
-    private static final String CHATBOT_TAG = "[Lokwx]";
-    private static final String CLOSING_MESSAGE = CHATBOT_TAG + " Bye. Hope to see you again soon!";
-
-    private static final Task[] tasks = new Task[100];
-    private static int numberOfTasks = 0;
+    public static final String DIVIDER = "_____________________________________";
+    public static final String CHATBOT_TAG = "[Lokwx]";
+    public static final String CLOSING_MESSAGE = CHATBOT_TAG + " Bye. Hope to see you again soon!";
 
     /**
-     * Adds a task with the specified description and displays a confirmation.
+     * Prints all tasks in the list.
      *
-     * @param description Description of the task to add.
+     * @param tasks Array of tasks.
+     * @param numberOfTasks Number of tasks currently recorded.
      */
-    public static void addTask(String description) {
-        if (!description.equalsIgnoreCase("bye") && !description.equalsIgnoreCase("list")) {
-            tasks[numberOfTasks++] = new Task(description);
-
-            System.out.println(CHATBOT_TAG + " added: " + description);
-            System.out.println(DIVIDER);
-        }
-    }
-
-    /**
-     * Prints all tasks in the order they were added.
-     */
-    public static void printList() {
+    public static void printList(Task[] tasks, int numberOfTasks) {
         for (int i = 0; i < numberOfTasks; i++) {
-            System.out.println(i + 1 + ". " + tasks[i].displayCheckbox() + " " + tasks[i].getDescription());
+            System.out.println((i + 1) + ". " + tasks[i].displayCheckbox() + " " + tasks[i].getDescription());
         }
         System.out.println(DIVIDER);
     }
@@ -46,63 +30,34 @@ public class Echo {
     }
 
     /**
-     * Marks the task at the specified index as done.
+     * Prints confirmation that a task was added.
      *
-     * @param itemIndex Zero-based index of the task to mark.
+     * @param description Description of the added task.
      */
-    public static void markTask(int itemIndex) {
-        tasks[itemIndex].setDone(true);
+    public static void printAddedTask(String description) {
+        System.out.println(CHATBOT_TAG + " added: " + description);
+        System.out.println(DIVIDER);
+    }
+
+    /**
+     * Prints confirmation that a task was marked as completed.
+     *
+     * @param task The task that was marked done.
+     */
+    public static void printMarkedTask(Task task) {
         System.out.println("Nice! I've marked this task as done:");
-        System.out.println(tasks[itemIndex].displayCheckbox() + " " + tasks[itemIndex].getDescription());
+        System.out.println(task.displayCheckbox() + " " + task.getDescription());
         System.out.println(DIVIDER);
     }
 
     /**
-     * Marks the task at the specified index as not done.
+     * Prints confirmation that a task was marked as incomplete.
      *
-     * @param itemIndex Zero-based index of the task to unmark.
+     * @param task The task that was marked not done.
      */
-    public static void unmarkTask(int itemIndex) {
-        tasks[itemIndex].setDone(false);
+    public static void printUnmarkedTask(Task task) {
         System.out.println("Okay, I've marked this task as not done yet:");
-        System.out.println(tasks[itemIndex].displayCheckbox() + " " + tasks[itemIndex].getDescription());
+        System.out.println(task.displayCheckbox() + " " + task.getDescription());
         System.out.println(DIVIDER);
-    }
-
-    /**
-     * Processes one line of user input as a chatbot command.
-     *
-     * @param input User input to process.
-     */
-    public static void handleInputCommands(String input) {
-        String[] inputCommands = input.split(" ");
-
-        switch (inputCommands[0].trim().toLowerCase()) {
-            case "bye" -> endChatbot();
-            case "list" -> printList();
-            case "mark" -> {
-                int itemIndex = Integer.parseInt(inputCommands[1]) - 1;
-                markTask(itemIndex);
-            }
-            case "unmark" -> {
-                int itemIndex = Integer.parseInt(inputCommands[1]) - 1;
-                unmarkTask(itemIndex);
-            }
-            default -> addTask(input);
-        }
-    }
-
-    /**
-     * Reads and processes user commands until the user enters bye.
-     *
-     * @param inputScanner Scanner that provides user input.
-     */
-    public static void echoCommands(Scanner inputScanner) {
-        String line;
-
-        do {
-            line = inputScanner.nextLine();
-            handleInputCommands(line);
-        } while (!line.equals("bye"));
     }
 }

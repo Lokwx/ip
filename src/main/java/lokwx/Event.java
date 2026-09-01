@@ -27,4 +27,17 @@ public class Event extends Task {
     public void setEventTo(String eventTo) {
         this.eventTo = eventTo;
     }
+
+    @Override
+    public String taskAddedString() {
+        return String.format(
+                "Got it. I've added this event:\n" +
+                "%s\n",displayTask()
+        );
+    }
+
+    @Override
+    public String displayTask() {
+        return String.format("[E]%s %s (from: %s to: %s)",displayCheckbox(), description, eventFrom, eventTo);
+    }
 }

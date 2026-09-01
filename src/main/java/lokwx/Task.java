@@ -12,9 +12,9 @@ public class Task {
         EVENT
     }
 
-    private TaskType taskType;
-    private String description;
-    private boolean isDone;
+    protected TaskType taskType;
+    protected String description;
+    protected boolean isDone;
 
     /**
      * Creates an incomplete task with the specified description.
@@ -58,6 +58,17 @@ public class Task {
      */
     public String displayCheckbox() {
         return "[" + (isDone ? "X" : " ") + "]";
+    }
+
+    public String taskAddedString() {
+        return String.format(
+                "Got it. I've added this task\n" +
+                "%s\n",displayTask()
+        );
+    }
+
+    public String displayTask() {
+        return String.format("[T]%s %s",displayCheckbox(),description);
     }
 
 

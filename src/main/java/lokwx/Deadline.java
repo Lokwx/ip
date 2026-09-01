@@ -18,4 +18,18 @@ public class Deadline extends Task {
     public void setDeadlineBy(String deadlineBy) {
         this.deadlineBy = deadlineBy;
     }
+
+    @Override
+    public String taskAddedString() {
+        return String.format(
+                "Got it. I've added this deadline:\n" +
+                "%s\n",displayTask()
+        );
+    }
+
+    @Override
+    public String displayTask() {
+        return String.format("[D]%s %s (by: %s)",displayCheckbox(), description, deadlineBy);
+    }
+
 }

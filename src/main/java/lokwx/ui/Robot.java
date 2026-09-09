@@ -1,4 +1,4 @@
-package lokwx;
+package lokwx.ui;
 
 /**
  * Provides robot illustrations used in console messages.

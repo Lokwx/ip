@@ -1,4 +1,6 @@
-package lokwx;
+package lokwx.task;
+
+import lokwx.ui.Echo;
 
 /**
  * Manages the collection of tasks and performs operations on them.

@@ -1,4 +1,6 @@
-package lokwx;
+package lokwx.ui;
+
+import lokwx.task.Task;
 
 /**
  * Handles formatting and printing chatbot output to the console.

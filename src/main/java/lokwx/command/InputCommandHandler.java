@@ -1,4 +1,8 @@
-package lokwx;
+package lokwx.command;
+
+import lokwx.exception.LokwxException;
+import lokwx.task.*;
+import lokwx.ui.Echo;
 
 /**
  * Parses user input and routes to the appropriate task and echo actions.

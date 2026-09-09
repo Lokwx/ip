@@ -9,6 +9,8 @@ public final class InputCommandHandler {
     private static final String DELIMITER_FROM = "/from";
     private static final String DELIMITER_TO = "/to";
     private static final int INDEX_NOT_FOUND = -1;
+    private static final int MINIMUM_INDEX = 0;
+    private static final int MIN_ARGUMENT_COUNT = 2;
 
     private InputCommandHandler() {
     }
@@ -33,7 +35,7 @@ public final class InputCommandHandler {
         case "bye" -> Echo.endChatbot();
         case "list" -> taskHandler.printAllTasks();
         case "mark" -> {
-            if (inputCommands.length < 2) {
+            if (inputCommands.length < MIN_ARGUMENT_COUNT || inputCommands[1].isEmpty()) {
                 throw new IllegalArgumentException("Oops! Please specify a task number to mark.");
             }
 
@@ -45,14 +47,14 @@ public final class InputCommandHandler {
             }
 
             // Handle wrong index
-            if (itemIndex <= 0 || itemIndex > taskHandler.getNumberOfTasks()) {
+            if (itemIndex <= MINIMUM_INDEX || itemIndex > taskHandler.getNumberOfTasks()) {
                 throw new IndexOutOfBoundsException("Oops! The number you typed in is not on the list!");
             }
 
             taskHandler.markTask(itemIndex - 1);
         }
         case "unmark" -> {
-            if (inputCommands.length < 2) {
+            if (inputCommands.length < MIN_ARGUMENT_COUNT || inputCommands[1].isEmpty()) {
                 throw new IllegalArgumentException("Oops! Please specify a task number to unmark.");
             }
 
@@ -64,14 +66,14 @@ public final class InputCommandHandler {
             }
 
             // Handle wrong index
-            if (itemIndex <= 0 || itemIndex > taskHandler.getNumberOfTasks()) {
+            if (itemIndex <= MINIMUM_INDEX || itemIndex > taskHandler.getNumberOfTasks()) {
                 throw new IndexOutOfBoundsException("Oops! The number you typed in is not on the list!");
             }
 
             taskHandler.unmarkTask(itemIndex - 1);
         }
         case "todo" -> {
-            String description = input.substring("todo".length()).trim();
+            String description = input.trim().substring("todo".length()).trim();
 
             // Handle empty todo
             if (description.isEmpty()) {
@@ -82,20 +84,21 @@ public final class InputCommandHandler {
             taskHandler.addTask(todo);
         }
         case "deadline" -> {
-            int byIndex = input.indexOf(DELIMITER_BY);
+            String trimmedInput = input.trim();
+            int byIndex = trimmedInput.indexOf(DELIMITER_BY);
 
             if (byIndex == INDEX_NOT_FOUND) {
                 throw new IndexOutOfBoundsException("Try: deadline <description> " + DELIMITER_BY + " <time>!");
             }
 
-            String description = input.substring("deadline".length(), byIndex).trim();
+            String description = trimmedInput.substring("deadline".length(), byIndex).trim();
 
             // Handle empty deadline
             if (description.isEmpty()) {
                 throw new IllegalArgumentException("Oops! The description of a deadline cannot be empty!");
             }
 
-            String deadlineBy = input.substring(byIndex + DELIMITER_BY.length()).trim();
+            String deadlineBy = trimmedInput.substring(byIndex + DELIMITER_BY.length()).trim();
 
             // Handle empty deadline date
             if (deadlineBy.isEmpty()) {
@@ -106,28 +109,29 @@ public final class InputCommandHandler {
             taskHandler.addTask(deadline);
         }
         case "event" -> {
-            int fromIndex = input.indexOf(DELIMITER_FROM);
-            int toIndex = input.indexOf(DELIMITER_TO);
+            String trimmedInput = input.trim();
+            int fromIndex = trimmedInput.indexOf(DELIMITER_FROM);
+            int toIndex = trimmedInput.indexOf(DELIMITER_TO);
 
             if (fromIndex == INDEX_NOT_FOUND || toIndex == INDEX_NOT_FOUND || fromIndex > toIndex) {
                 throw new IndexOutOfBoundsException("Try: event <description> "
                         + DELIMITER_FROM + " <time> " + DELIMITER_TO + " <time>");
             }
 
-            String description = input.substring("event".length(), fromIndex).trim();
+            String description = trimmedInput.substring("event".length(), fromIndex).trim();
 
             // Handle empty description
             if (description.isEmpty()) {
                 throw new IllegalArgumentException("Oops! The description of an event cannot be empty!");
             }
 
-            String eventFrom = input.substring(fromIndex + DELIMITER_FROM.length(), toIndex).trim();
+            String eventFrom = trimmedInput.substring(fromIndex + DELIMITER_FROM.length(), toIndex).trim();
 
             if (eventFrom.isEmpty()) {
                 throw new IllegalArgumentException("Oops! You need to set a start time!");
             }
 
-            String eventTo = input.substring(toIndex + DELIMITER_TO.length()).trim();
+            String eventTo = trimmedInput.substring(toIndex + DELIMITER_TO.length()).trim();
 
             if (eventTo.isEmpty()) {
                 throw new IllegalArgumentException("Oops! You need to set an end time!");

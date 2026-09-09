@@ -37,7 +37,7 @@ public final class Lokwx {
             line = inputScanner.nextLine();
             try {
                 InputCommandHandler.handleInputCommand(line, taskHandler);
-            } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+            } catch (IllegalArgumentException | IndexOutOfBoundsException | LokwxException e) {
                 System.out.println(e.getMessage());
                 Echo.printRobot(Robot.ROBOT_SAD);
             }

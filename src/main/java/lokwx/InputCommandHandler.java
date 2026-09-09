@@ -24,9 +24,9 @@ public final class InputCommandHandler {
      * @throws IndexOutOfBoundsException If a referenced task number is outside the valid range.
      */
     public static void handleInputCommand(String input, TaskHandler taskHandler)
-            throws IllegalArgumentException, IndexOutOfBoundsException {
+            throws LokwxException, IllegalArgumentException, IndexOutOfBoundsException {
         if (input.trim().isEmpty()) {
-            throw new IllegalArgumentException("Input cannot be empty.");
+            throw new LokwxException("Input cannot be empty.");
         }
 
         String[] inputCommands = input.trim().split(" ");
@@ -140,7 +140,7 @@ public final class InputCommandHandler {
             Event event = new Event(description, eventFrom, eventTo, Task.TaskType.EVENT);
             taskHandler.addTask(event);
         }
-        default -> throw new IllegalArgumentException("Oops! I'm sorry, but I don't understand what you mean.");
+        default -> throw new LokwxException("Oops! I'm sorry, but I don't understand what you mean.");
         }
     }
 }

@@ -35,7 +35,12 @@ public final class Lokwx {
 
         do {
             line = inputScanner.nextLine();
-            InputCommandHandler.handleInputCommand(line, taskHandler);
+            try {
+                InputCommandHandler.handleInputCommand(line, taskHandler);
+            } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+                System.out.println(e.getMessage());
+                Echo.printRobot(Robot.ROBOT_SAD);
+            }
         } while (!line.trim().equalsIgnoreCase("bye"));
     }
 }

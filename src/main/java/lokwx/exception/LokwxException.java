@@ -1,4 +1,4 @@
-package lokwx;
+package lokwx.exception;
 
 /**
  * Represents chatbot-specific domain exceptions in Lokwx.

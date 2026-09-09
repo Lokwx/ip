@@ -1,4 +1,4 @@
-package lokwx;
+package lokwx.task;
 
 /**
  * Represents an event task occurring over a time period.

@@ -1,4 +1,4 @@
-package lokwx;
+package lokwx.task;
 
 /**
  * Represents a task tracked by the Lokwx chatbot.

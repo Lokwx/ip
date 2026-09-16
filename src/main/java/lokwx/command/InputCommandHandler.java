@@ -8,6 +8,8 @@ import lokwx.task.TaskHandler;
 import lokwx.task.Todo;
 import lokwx.ui.Echo;
 
+import java.io.IOException;
+
 /**
  * Parses user input and routes to the appropriate task and echo actions.
  */
@@ -44,7 +46,7 @@ public final class InputCommandHandler {
      *         a delete task number is missing, or required time delimiters are missing or out of order.
      */
     public static void handleInputCommand(String input, TaskHandler taskHandler)
-            throws LokwxException, IllegalArgumentException, IndexOutOfBoundsException {
+            throws LokwxException, IllegalArgumentException, IndexOutOfBoundsException, IOException {
         if (input.trim().isEmpty()) {
             throw new LokwxException("Input cannot be empty.");
         }
@@ -53,7 +55,9 @@ public final class InputCommandHandler {
 
         // Normalize only the command word so task descriptions retain their original capitalization.
         switch (inputCommands[0].trim().toLowerCase()) {
-            case "bye" -> Echo.endChatbot();
+            case "bye" -> {
+                Echo.endChatbot();
+            }
             case "list" -> {
                 if (taskHandler.getNumberOfTasks() == 0) {
                     throw new LokwxException("Oops! list is empty, please add a task!");
@@ -105,8 +109,9 @@ public final class InputCommandHandler {
                     throw new IllegalArgumentException("Oops! The description of a todo cannot be empty.");
                 }
 
-                Todo todo = new Todo(description, Task.TaskType.TODO);
+                Todo todo = new Todo(description, Task.TaskType.TODO, false);
                 taskHandler.addTask(todo);
+
             }
             case "deadline" -> {
                 String trimmedInput = input.trim();
@@ -129,7 +134,7 @@ public final class InputCommandHandler {
                     throw new IllegalArgumentException("Oops! You need to set a deadline!");
                 }
 
-                Deadline deadline = new Deadline(description, deadlineBy, Task.TaskType.DEADLINE);
+                Deadline deadline = new Deadline(description, deadlineBy, Task.TaskType.DEADLINE, false);
                 taskHandler.addTask(deadline);
             }
             case "event" -> {
@@ -161,7 +166,7 @@ public final class InputCommandHandler {
                     throw new IllegalArgumentException("Oops! You need to set an end time!");
                 }
 
-                Event event = new Event(description, eventFrom, eventTo, Task.TaskType.EVENT);
+                Event event = new Event(description, eventFrom, eventTo, Task.TaskType.EVENT, false);
                 taskHandler.addTask(event);
             }
             case "delete" -> {

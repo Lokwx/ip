@@ -5,6 +5,7 @@
 - Working directory: repository root
 - Required Java version: 25
 - Build command: `javac -d bin $(find src/main/java -name "*.java")`
+- Windows PowerShell build command: `javac -d bin (Get-ChildItem -Path src/main/java -Recurse -Filter *.java).FullName`
 - Launch command: `java -cp bin lokwx.Lokwx`
 - Shutdown command: `bye`
 - Comparison rule: Normalize line endings to LF, then compare exactly without trimming.

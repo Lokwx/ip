@@ -2,14 +2,13 @@ package lokwx.task;
 
 import lokwx.ui.Echo;
 
+import java.util.ArrayList;
+
 /**
  * Manages the collection of tasks and performs operations on them.
  */
 public class TaskHandler {
-    private static final int MAX_TASKS = 100;
-
-    private final Task[] tasks = new Task[MAX_TASKS];
-    private int numberOfTasks = 0;
+    private final ArrayList<Task> tasks = new ArrayList<>();
 
     /**
      * Adds the specified task and displays a confirmation.
@@ -17,8 +16,14 @@ public class TaskHandler {
      * @param task Task to add.
      */
     public void addTask(Task task) {
-        tasks[numberOfTasks++] = task;
-        Echo.printTaskAddedConfirmation(task, numberOfTasks);
+        tasks.add(task);
+        Echo.printTaskAddedConfirmation(task, tasks.size());
+    }
+
+    public void removeTask(int taskNumber) {
+        Task toDelete = tasks.get(taskNumber);
+        tasks.remove(taskNumber);
+        Echo.printTaskRemovedConfirmation(toDelete, tasks.size());
     }
 
     /**
@@ -27,8 +32,8 @@ public class TaskHandler {
      * @param itemIndex Zero-based index of the task to mark.
      */
     public void markTask(int itemIndex) {
-        tasks[itemIndex].setDone(true);
-        Echo.printMarkedTask(tasks[itemIndex]);
+        tasks.get(itemIndex).setDone(true);
+        Echo.printMarkedTask(tasks.get(itemIndex));
     }
 
     /**
@@ -37,18 +42,18 @@ public class TaskHandler {
      * @param itemIndex Zero-based index of the task to unmark.
      */
     public void unmarkTask(int itemIndex) {
-        tasks[itemIndex].setDone(false);
-        Echo.printUnmarkedTask(tasks[itemIndex]);
+        tasks.get(itemIndex).setDone(false);
+        Echo.printUnmarkedTask(tasks.get(itemIndex));
     }
 
     /**
      * Prints all recorded tasks.
      */
     public void printAllTasks() {
-        Echo.printList(tasks, numberOfTasks);
+        Echo.printList(tasks, tasks.size());
     }
 
     public int getNumberOfTasks() {
-        return numberOfTasks;
+        return tasks.size();
     }
 }

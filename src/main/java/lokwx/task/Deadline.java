@@ -32,6 +32,11 @@ public class Deadline extends Task {
     }
 
     @Override
+    public String getTaskRemovedMessage() {
+        return String.format("Got it. I've removed this deadline:\n%s\n", displayTask());
+    }
+
+    @Override
     public String displayTask() {
         return String.format("[D]%s %s (by: %s)", displayCheckbox(), description, deadlineBy);
     }

@@ -74,6 +74,15 @@ public class Task {
     }
 
     /**
+     * Returns the confirmation message shown when this task is removed.
+     *
+     * @return Task-added confirmation message.
+     */
+    public String getTaskRemovedMessage() {
+        return String.format("Got it. I've removed this task\n%s\n", displayTask());
+    }
+
+    /**
      * Returns this task formatted for display in the task list.
      *
      * @return Formatted task description and completion status.

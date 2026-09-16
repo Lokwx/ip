@@ -17,6 +17,7 @@ public final class InputCommandHandler {
     private static final String DELIMITER_FROM = "/from";
     private static final String DELIMITER_TO = "/to";
     private static final int INDEX_NOT_FOUND = -1;
+    public static final int INVALID_SIZE = 0;
     private static final int MINIMUM_INDEX = 0;
     private static final int MIN_ARGUMENT_COUNT = 2;
     /**
@@ -164,7 +165,7 @@ public final class InputCommandHandler {
                 taskHandler.addTask(event);
             }
             case "delete" -> {
-                if (taskHandler.getNumberOfTasks() == 0) {
+                if (taskHandler.getNumberOfTasks() == INVALID_SIZE) {
                     throw new LokwxException("Oops! please add a task before deleting!");
                 }
 
@@ -173,13 +174,13 @@ public final class InputCommandHandler {
                 try {
                     indexToDelete = Integer.parseInt(inputCommands[1]);
                 } catch (IndexOutOfBoundsException e) {
-                    throw new IndexOutOfBoundsException(String.format(
-                            "Oops! you need to enter a valid number from [1-%d]", taskHandler.getNumberOfTasks()));
+                    throw new IndexOutOfBoundsException("Oops! you need to enter a valid number!");
+                } catch (NumberFormatException e) {
+                    throw new NumberFormatException("Oops! you need to enter a valid number!");
                 }
 
-                if (indexToDelete < 0 || indexToDelete > taskHandler.getNumberOfTasks()) {
-                    throw new LokwxException(String.format(
-                            "Oops! you need to enter a valid number from [1-%d]", taskHandler.getNumberOfTasks()));
+                if (indexToDelete <= MINIMUM_INDEX || indexToDelete > taskHandler.getNumberOfTasks()) {
+                    throw new LokwxException("Oops! you need to enter a valid number!");
                 }
 
                 // Convert the displayed task number to the index expected by TaskHandler.

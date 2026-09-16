@@ -10,6 +10,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,10 +49,19 @@ public final class FileHandler {
      * @throws IOException If the data file cannot be read.
      */
     public static void readData(TaskHandler taskHandler) throws IOException {
-        for (String line : Files.readAllLines(DATA_FILE_PATH)) {
+        List<Task> loadedTasks = new ArrayList<>();
+        List<String> lines = Files.readAllLines(DATA_FILE_PATH);
+
+        for (int lineIndex = 0; lineIndex < lines.size(); lineIndex++) {
+            String line = lines.get(lineIndex);
+
             if (!line.isBlank()) {
-                taskHandler.addLoadedTask(createTask(line));
+                loadedTasks.add(createTask(line, lineIndex + 1));
             }
+        }
+
+        for (Task task : loadedTasks) {
+            taskHandler.addLoadedTask(task);
         }
     }
 
@@ -72,27 +82,27 @@ public final class FileHandler {
         }
     }
 
-    private static Task createTask(String line) throws IOException {
+    private static Task createTask(String line, int lineNumber) throws IOException {
         String[] fields = line.split("\\|", -1);
 
         if (fields.length < DESCRIPTION_INDEX + 1) {
-            throw new IOException("Saved task has an invalid format.");
+            throw corruptedFileException(lineNumber, "an invalid format");
         }
 
-        boolean isDone = parseDoneStatus(fields[IS_DONE_INDEX]);
+        boolean isDone = parseDoneStatus(fields[IS_DONE_INDEX], lineNumber);
         String description = fields[DESCRIPTION_INDEX];
 
         return switch (fields[TASK_TYPE_INDEX]) {
         case "T" -> new Todo(description, Task.TaskType.TODO, isDone);
-        case "D" -> new Deadline(description, getField(fields, DEADLINE_BY_INDEX),
+        case "D" -> new Deadline(description, getField(fields, DEADLINE_BY_INDEX, lineNumber),
                 Task.TaskType.DEADLINE, isDone);
-        case "E" -> new Event(description, getField(fields, EVENT_FROM_INDEX),
-                getField(fields, EVENT_TO_INDEX), Task.TaskType.EVENT, isDone);
-        default -> throw new IOException("Saved task has an unknown type.");
+        case "E" -> new Event(description, getField(fields, EVENT_FROM_INDEX, lineNumber),
+                getField(fields, EVENT_TO_INDEX, lineNumber), Task.TaskType.EVENT, isDone);
+        default -> throw corruptedFileException(lineNumber, "an unknown task type");
         };
     }
 
-    private static boolean parseDoneStatus(String status) throws IOException {
+    private static boolean parseDoneStatus(String status, int lineNumber) throws IOException {
         if (status.equals("0")) {
             return false;
         }
@@ -101,15 +111,19 @@ public final class FileHandler {
             return true;
         }
 
-        throw new IOException("Saved task has an invalid completion status.");
+        throw corruptedFileException(lineNumber, "an invalid completion status");
     }
 
-    private static String getField(String[] fields, int index) throws IOException {
+    private static String getField(String[] fields, int index, int lineNumber) throws IOException {
         if (fields.length <= index) {
-            throw new IOException("Saved task has an invalid format.");
+            throw corruptedFileException(lineNumber, "an invalid format");
         }
 
         return fields[index];
+    }
+
+    private static IOException corruptedFileException(int lineNumber, String problem) {
+        return new IOException("Data file is corrupted at line " + lineNumber + ": " + problem + ".");
     }
 
     private static String formatTask(Task task) {

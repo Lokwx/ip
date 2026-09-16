@@ -10,8 +10,8 @@ public class Todo extends Task {
      * @param description Description of the todo task.
      * @param taskType Type used to identify the task.
      */
-    public Todo(String description, TaskType taskType) {
-        super(description, taskType);
+    public Todo(String description, TaskType taskType, boolean isDone) {
+        super(description, taskType, isDone);
     }
 
     @Override

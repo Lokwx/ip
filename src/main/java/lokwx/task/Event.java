@@ -15,8 +15,8 @@ public class Event extends Task {
      * @param eventTo End of the event period.
      * @param taskType Type used to identify the task.
      */
-    public Event(String description, String eventFrom, String eventTo, TaskType taskType) {
-        super(description, taskType);
+    public Event(String description, String eventFrom, String eventTo, TaskType taskType, boolean isDone) {
+        super(description, taskType,isDone);
         this.eventFrom = eventFrom;
         this.eventTo = eventTo;
     }

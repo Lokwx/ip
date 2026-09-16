@@ -13,8 +13,8 @@ public class Deadline extends Task {
      * @param deadlineBy Due date or time of the task.
      * @param taskType Type used to identify the task.
      */
-    public Deadline(String description, String deadlineBy, TaskType taskType) {
-        super(description, taskType);
+    public Deadline(String description, String deadlineBy, TaskType taskType, boolean isDone) {
+        super(description, taskType, isDone);
         this.deadlineBy = deadlineBy;
     }
 

@@ -25,10 +25,10 @@ public class Task {
      * @param description Description of the task.
      * @param taskType Type used to identify the task.
      */
-    public Task(String description, TaskType taskType) {
+    public Task(String description, TaskType taskType, boolean isDone) {
         this.description = description;
         this.taskType = taskType;
-        this.isDone = false;
+        this.isDone = isDone;
     }
 
     public void setDescription(String newDescription) {
@@ -43,7 +43,7 @@ public class Task {
         this.isDone = isDone;
     }
 
-    public boolean isDone() {
+    public boolean getIsDone() {
         return isDone;
     }
 

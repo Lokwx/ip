@@ -1,11 +1,13 @@
 package lokwx;
 
 import lokwx.command.InputCommandHandler;
+import lokwx.data.FileHandler;
 import lokwx.exception.LokwxException;
 import lokwx.task.TaskHandler;
 import lokwx.ui.Echo;
 import lokwx.ui.Robot;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -39,11 +41,25 @@ public final class Lokwx {
         Scanner inputScanner = new Scanner(System.in);
         String line;
 
+        try {
+            FileHandler.createFile();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            Echo.printRobot(Robot.ROBOT_SAD);
+        }
+
+        try {
+            FileHandler.readData(taskHandler);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            Echo.printRobot(Robot.ROBOT_SAD);
+        }
+
         do {
             line = inputScanner.nextLine();
             try {
                 InputCommandHandler.handleInputCommand(line, taskHandler);
-            } catch (IllegalArgumentException | IndexOutOfBoundsException | LokwxException e) {
+            } catch (IllegalArgumentException | IndexOutOfBoundsException | LokwxException | IOException e) {
                 System.out.println(e.getMessage());
                 Echo.printRobot(Robot.ROBOT_SAD);
             }

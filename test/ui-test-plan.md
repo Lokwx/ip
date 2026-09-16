@@ -10,6 +10,7 @@
 - Shutdown command: `bye`
 - Comparison rule: Normalize line endings to LF, then compare exactly without trimming.
 - Session rule: Use a fresh Lokwx process for each complete test run unless a test case explicitly requires a different setup.
+- Storage rule: Before each test case, remove `data/lokwx.txt` if it exists. UI-04 removes it only before session A.
 
 ## Test cases
 
@@ -320,6 +321,96 @@ Bye. Hope to see you again soon!
 
     o
    / \
+ .[^_^]./
+  /|o|
+__________________________________________________
+```
+
+### UI-04: Save and reload a task
+
+**Aim:** Verify that adding a task saves it to disk and a new chatbot session loads it.
+
+**Setup:** Remove `data/lokwx.txt`. Launch fresh session A for checks 1-2, then launch fresh session B for checks 3-4.
+
+#### Check 1
+
+**Input command**
+
+```text
+todo read book
+```
+
+**Expected output**
+
+```text
+
+Got it. I've added this Todo:
+[T][ ] read book
+Now you have 1 task in this list.
+
+   ^^^^^
+ \\.[^_^]./
+    |o|
+__________________________________________________
+```
+
+#### Check 2
+
+**Input command**
+
+```text
+bye
+```
+
+**Expected output**
+
+```text
+
+Bye. Hope to see you again soon!
+
+    o
+   / \\
+ .[^_^]./
+  /|o|
+__________________________________________________
+```
+
+#### Check 3
+
+**Input command**
+
+```text
+list
+```
+
+**Expected output**
+
+```text
+
+1. [T][ ] read book
+
+  ?????
+ .[o_o].
+  /|o|\\
+__________________________________________________
+```
+
+#### Check 4
+
+**Input command**
+
+```text
+bye
+```
+
+**Expected output**
+
+```text
+
+Bye. Hope to see you again soon!
+
+    o
+   / \\
  .[^_^]./
   /|o|
 __________________________________________________

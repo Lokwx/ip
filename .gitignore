@@ -22,3 +22,6 @@ text-ui-test/EXPECTED-UNIX.TXT
 
 # Bash Scripts
 /run.sh
+
+# Data
+data/lokwx.txt

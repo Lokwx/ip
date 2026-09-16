@@ -18,4 +18,9 @@ public class Todo extends Task {
     public String getTaskAddedMessage() {
         return String.format("Got it. I've added this Todo:\n%s\n", displayTask());
     }
+
+    @Override
+    public String getTaskRemovedMessage() {
+        return String.format("Got it. I've removed this Todo:\n%s\n", displayTask());
+    }
 }

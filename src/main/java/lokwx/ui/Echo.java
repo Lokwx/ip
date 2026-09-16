@@ -2,6 +2,8 @@ package lokwx.ui;
 
 import lokwx.task.Task;
 
+import java.util.ArrayList;
+
 /**
  * Handles formatting and printing chatbot output to the console.
  */
@@ -17,10 +19,10 @@ public final class Echo {
      * @param tasks Array of tasks.
      * @param numberOfTasks Number of tasks currently recorded.
      */
-    public static void printList(Task[] tasks, int numberOfTasks) {
+    public static void printList(ArrayList<Task> tasks, int numberOfTasks) {
         System.out.println();
         for (int i = 0; i < numberOfTasks; i++) {
-            System.out.printf("%d. %s\n", i + 1, tasks[i].displayTask());
+            System.out.printf("%d. %s\n", i + 1, tasks.get(i).displayTask());
         }
         printRobot(Robot.ROBOT_LIST);
     }
@@ -63,6 +65,14 @@ public final class Echo {
     public static void printTaskAddedConfirmation(Task task, int numberOfTasks) {
         System.out.println();
         System.out.print(task.getTaskAddedMessage());
+        System.out.printf("Now you have %d %s in this list.\n",
+                numberOfTasks, numberOfTasks > 1 ? "tasks" : "task");
+        printRobot(Robot.ROBOT_EXCITED);
+    }
+
+    public static void printTaskRemovedConfirmation(Task task, int numberOfTasks) {
+        System.out.println();
+        System.out.print(task.getTaskRemovedMessage());
         System.out.printf("Now you have %d %s in this list.\n",
                 numberOfTasks, numberOfTasks > 1 ? "tasks" : "task");
         printRobot(Robot.ROBOT_EXCITED);

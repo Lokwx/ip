@@ -43,6 +43,11 @@ public class Event extends Task {
     }
 
     @Override
+    public String getTaskRemovedMessage() {
+        return String.format("Got it. I've removed this event:\n%s\n", displayTask());
+    }
+
+    @Override
     public String displayTask() {
         return String.format("[E]%s %s (from: %s to: %s)",
                 displayCheckbox(), description, eventFrom, eventTo);

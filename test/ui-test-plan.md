@@ -4,7 +4,7 @@
 
 - Working directory: repository root
 - Required Java version: 25
-- Build command: `javac -d bin src/main/java/lokwx/*.java`
+- Build command: `javac -d bin $(find src/main/java -name "*.java")`
 - Launch command: `java -cp bin lokwx.Lokwx`
 - Shutdown command: `bye`
 - Comparison rule: Normalize line endings to LF, then compare exactly without trimming.

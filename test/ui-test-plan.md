@@ -217,3 +217,110 @@ Bye. Hope to see you again soon!
   /|o|
 __________________________________________________
 ```
+
+### UI-03: Reject invalid task numbers when deleting
+
+**Aim:** Verify that deleting with zero or a nonnumeric task number displays an error and preserves the task.
+
+**Setup:** Fresh application session with one task.
+
+#### Check 1
+
+**Input command**
+
+```text
+todo read book
+```
+
+**Expected output**
+
+```text
+
+Got it. I've added this Todo:
+[T][ ] read book
+Now you have 1 task in this list.
+
+   ^^^^^
+ \.[^_^]./
+    |o|
+__________________________________________________
+```
+
+#### Check 2
+
+**Input command**
+
+```text
+delete 0
+```
+
+**Expected output**
+
+```text
+Oops! you need to enter a valid number!
+
+  _____
+ .[T_T].
+  /|o|\
+__________________________________________________
+```
+
+#### Check 3
+
+**Input command**
+
+```text
+delete abc
+```
+
+**Expected output**
+
+```text
+Oops! you need to enter a valid number!
+
+  _____
+ .[T_T].
+  /|o|\
+__________________________________________________
+```
+
+#### Check 4
+
+**Input command**
+
+```text
+list
+```
+
+**Expected output**
+
+```text
+
+1. [T][ ] read book
+
+  ?????
+ .[o_o].
+  /|o|\
+__________________________________________________
+```
+
+#### Check 5
+
+**Input command**
+
+```text
+bye
+```
+
+**Expected output**
+
+```text
+
+Bye. Hope to see you again soon!
+
+    o
+   / \
+ .[^_^]./
+  /|o|
+__________________________________________________
+```

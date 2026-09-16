@@ -103,3 +103,116 @@ Bye. Hope to see you again soon!
   /|o|
 __________________________________________________
 ```
+
+### UI-02: Delete a task from the list
+
+**Aim:** Verify that deleting a task removes it and decrements the remaining task count.
+
+**Setup:** Fresh application session.
+
+#### Check 1
+
+**Input command**
+
+```text
+todo read book
+```
+
+**Expected output**
+
+```text
+
+Got it. I've added this Todo:
+[T][ ] read book
+Now you have 1 task in this list.
+
+   ^^^^^
+ \.[^_^]./
+    |o|
+__________________________________________________
+```
+
+#### Check 2
+
+**Input command**
+
+```text
+todo submit assignment
+```
+
+**Expected output**
+
+```text
+
+Got it. I've added this Todo:
+[T][ ] submit assignment
+Now you have 2 tasks in this list.
+
+   ^^^^^
+ \.[^_^]./
+    |o|
+__________________________________________________
+```
+
+#### Check 3
+
+**Input command**
+
+```text
+delete 1
+```
+
+**Expected output**
+
+```text
+
+Got it. I've removed this Todo:
+[T][ ] read book
+Now you have 1 task in this list.
+
+   ^^^^^
+ \.[^_^]./
+    |o|
+__________________________________________________
+```
+
+#### Check 4
+
+**Input command**
+
+```text
+list
+```
+
+**Expected output**
+
+```text
+
+1. [T][ ] submit assignment
+
+  ?????
+ .[o_o].
+  /|o|\
+__________________________________________________
+```
+
+#### Check 5
+
+**Input command**
+
+```text
+bye
+```
+
+**Expected output**
+
+```text
+
+Bye. Hope to see you again soon!
+
+    o
+   / \
+ .[^_^]./
+  /|o|
+__________________________________________________
+```

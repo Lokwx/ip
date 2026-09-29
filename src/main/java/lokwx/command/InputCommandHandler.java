@@ -25,6 +25,9 @@ public final class InputCommandHandler {
     private static final String DELIMITER_FROM = "/from";
     private static final String DELIMITER_TO = "/to";
     private static final int INDEX_NOT_FOUND = -1;
+    /**
+     * Defines the number of tasks in an empty task list.
+     */
     public static final int INVALID_SIZE = 0;
     private static final int MINIMUM_INDEX = 0;
     private static final int MIN_ARGUMENT_COUNT = 2;
@@ -55,6 +58,7 @@ public final class InputCommandHandler {
      * @throws IllegalArgumentException If command syntax, format, or argument values are invalid.
      * @throws IndexOutOfBoundsException If a referenced task number is outside the valid range,
      *         a delete task number is missing, or required time delimiters are missing or out of order.
+     * @throws IOException If a task update cannot be saved.
      */
     public static void handleInputCommand(String input, TaskHandler taskHandler)
             throws LokwxException, IllegalArgumentException, IndexOutOfBoundsException, IOException {

@@ -106,6 +106,161 @@ Bye. Hope to see you again soon!
 __________________________________________________
 ```
 
+### UI-06: Find tasks by description keyword
+
+**Aim:** Verify that finding tasks searches descriptions across task types without regard to letter case, reports when
+no tasks match, and rejects an empty keyword.
+
+**Setup:** Fresh application session.
+
+#### Check 1
+
+**Input command**
+
+```text
+todo read book
+```
+
+**Expected output**
+
+```text
+
+Got it. I've added this Todo:
+[T][ ] read book
+Now you have 1 task in this list.
+
+   ^^^^^
+ \.[^_^]./
+    |o|
+__________________________________________________
+```
+
+#### Check 2
+
+**Input command**
+
+```text
+deadline return book /by 2/12/2019 1800
+```
+
+**Expected output**
+
+```text
+
+Got it. I've added this deadline:
+[D][ ] return book (by: Dec 02 2019, 6:00 PM)
+Now you have 2 tasks in this list.
+
+   ^^^^^
+ \.[^_^]./
+    |o|
+__________________________________________________
+```
+
+#### Check 3
+
+**Input command**
+
+```text
+todo write essay
+```
+
+**Expected output**
+
+```text
+
+Got it. I've added this Todo:
+[T][ ] write essay
+Now you have 3 tasks in this list.
+
+   ^^^^^
+ \.[^_^]./
+    |o|
+__________________________________________________
+```
+
+#### Check 4
+
+**Input command**
+
+```text
+find BOOK
+```
+
+**Expected output**
+
+```text
+
+Here are the matching tasks in your list:
+1. [T][ ] read book
+2. [D][ ] return book (by: Dec 02 2019, 6:00 PM)
+
+  ?????
+ .[o_o].
+  /|o|\
+__________________________________________________
+```
+
+#### Check 5
+
+**Input command**
+
+```text
+find textbook
+```
+
+**Expected output**
+
+```text
+
+No matching tasks found.
+
+  ?????
+ .[o_o].
+  /|o|\
+__________________________________________________
+```
+
+#### Check 6
+
+**Input command**
+
+```text
+find
+```
+
+**Expected output**
+
+```text
+Oops! Please enter a keyword to find.
+
+  _____
+ .[T_T].
+  /|o|\
+__________________________________________________
+```
+
+#### Check 7
+
+**Input command**
+
+```text
+bye
+```
+
+**Expected output**
+
+```text
+
+Bye. Hope to see you again soon!
+
+    o
+   / \
+ .[^_^]./
+  /|o|
+__________________________________________________
+```
+
 ### UI-02: Delete a task from the list
 
 **Aim:** Verify that deleting a task removes it and decrements the remaining task count.

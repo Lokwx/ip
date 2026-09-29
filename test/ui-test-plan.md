@@ -349,7 +349,7 @@ Got it. I've added this Todo:
 Now you have 1 task in this list.
 
    ^^^^^
- \\.[^_^]./
+ \.[^_^]./
     |o|
 __________________________________________________
 ```
@@ -369,7 +369,7 @@ bye
 Bye. Hope to see you again soon!
 
     o
-   / \\
+   / \
  .[^_^]./
   /|o|
 __________________________________________________
@@ -391,7 +391,7 @@ list
 
   ?????
  .[o_o].
-  /|o|\\
+  /|o|\
 __________________________________________________
 ```
 
@@ -410,7 +410,140 @@ bye
 Bye. Hope to see you again soon!
 
     o
-   / \\
+   / \
+ .[^_^]./
+  /|o|
+__________________________________________________
+```
+
+### UI-05: Parse, format, validate, and reload deadlines
+
+**Aim:** Verify that deadline dates become date-time values, display in a friendly format, reject impossible dates,
+and retain their value after reloading from disk.
+
+**Setup:** Remove `data/lokwx.txt`. Launch fresh session A for checks 1-4, then launch fresh session B for checks 5-6.
+
+#### Check 1
+
+**Input command**
+
+```text
+deadline return book /by 2/12/2019 1800
+```
+
+**Expected output**
+
+```text
+
+Got it. I've added this deadline:
+[D][ ] return book (by: Dec 02 2019, 6:00PM)
+Now you have 1 task in this list.
+
+   ^^^^^
+ \.[^_^]./
+    |o|
+__________________________________________________
+```
+
+#### Check 2
+
+**Input command**
+
+```text
+deadline submit report /by 2019-10-15
+```
+
+**Expected output**
+
+```text
+
+Got it. I've added this deadline:
+[D][ ] submit report (by: Oct 15 2019)
+Now you have 2 tasks in this list.
+
+   ^^^^^
+ \.[^_^]./
+    |o|
+__________________________________________________
+```
+
+#### Check 3
+
+**Input command**
+
+```text
+deadline impossible date /by 31/2/2019 1800
+```
+
+**Expected output**
+
+```text
+Oops! Enter the deadline as d/M/yyyy HHmm, yyyy-MM-dd HHmm, or yyyy-MM-dd.
+
+  _____
+ .[T_T].
+  /|o|\
+__________________________________________________
+```
+
+#### Check 4
+
+**Input command**
+
+```text
+bye
+```
+
+**Expected output**
+
+```text
+
+Bye. Hope to see you again soon!
+
+    o
+   / \
+ .[^_^]./
+  /|o|
+__________________________________________________
+```
+
+#### Check 5
+
+**Input command**
+
+```text
+list
+```
+
+**Expected output**
+
+```text
+
+1. [D][ ] return book (by: Dec 02 2019, 6:00PM)
+2. [D][ ] submit report (by: Oct 15 2019)
+
+  ?????
+ .[o_o].
+  /|o|\
+__________________________________________________
+```
+
+#### Check 6
+
+**Input command**
+
+```text
+bye
+```
+
+**Expected output**
+
+```text
+
+Bye. Hope to see you again soon!
+
+    o
+   / \
  .[^_^]./
   /|o|
 __________________________________________________

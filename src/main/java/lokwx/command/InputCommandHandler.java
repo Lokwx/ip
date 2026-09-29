@@ -58,24 +58,19 @@ public final class InputCommandHandler {
      */
     public static void handleInputCommand(String input, TaskHandler taskHandler)
             throws LokwxException, IllegalArgumentException, IndexOutOfBoundsException, IOException {
-        if (input.trim().isEmpty()) {
-            throw new LokwxException("Input cannot be empty.");
-        }
-
         String[] inputCommands = input.trim().split(" ");
 
-        // Normalize only the command word so task descriptions retain their original capitalization.
-        switch (inputCommands[0].trim().toLowerCase()) {
-            case "bye" -> {
+        switch (Parser.parseCommandType(input)) {
+            case BYE -> {
                 Echo.endChatbot();
             }
-            case "list" -> {
+            case LIST -> {
                 if (taskHandler.getNumberOfTasks() == 0) {
                     throw new LokwxException("Oops! list is empty, please add a task!");
                 }
                 taskHandler.printAllTasks();
             }
-            case "find" -> {
+            case FIND -> {
                 String keyword = input.trim().substring("find".length()).trim();
 
                 if (keyword.isEmpty()) {
@@ -84,7 +79,7 @@ public final class InputCommandHandler {
 
                 taskHandler.printMatchingTasks(keyword);
             }
-            case "mark" -> {
+            case MARK -> {
                 if (inputCommands.length < MIN_ARGUMENT_COUNT || inputCommands[1].isEmpty()) {
                     throw new IllegalArgumentException("Oops! Please specify a task number to mark.");
                 }
@@ -103,7 +98,7 @@ public final class InputCommandHandler {
 
                 taskHandler.markTask(itemIndex - 1);
             }
-            case "unmark" -> {
+            case UNMARK -> {
                 if (inputCommands.length < MIN_ARGUMENT_COUNT || inputCommands[1].isEmpty()) {
                     throw new IllegalArgumentException("Oops! Please specify a task number to unmark.");
                 }
@@ -122,7 +117,7 @@ public final class InputCommandHandler {
 
                 taskHandler.unmarkTask(itemIndex - 1);
             }
-            case "todo" -> {
+            case TODO -> {
                 String description = input.trim().substring("todo".length()).trim();
 
                 if (description.isEmpty()) {
@@ -133,7 +128,7 @@ public final class InputCommandHandler {
                 taskHandler.addTask(todo);
 
             }
-            case "deadline" -> {
+            case DEADLINE -> {
                 String trimmedInput = input.trim();
                 // The first /by separates the description from the deadline text.
                 int byIndex = trimmedInput.indexOf(DELIMITER_BY);
@@ -158,7 +153,7 @@ public final class InputCommandHandler {
                 Deadline deadline = new Deadline(description, deadlineBy, Task.TaskType.DEADLINE, false);
                 taskHandler.addTask(deadline);
             }
-            case "event" -> {
+            case EVENT -> {
                 String trimmedInput = input.trim();
                 int fromIndex = trimmedInput.indexOf(DELIMITER_FROM);
                 int toIndex = trimmedInput.indexOf(DELIMITER_TO);
@@ -190,7 +185,7 @@ public final class InputCommandHandler {
                 Event event = new Event(description, eventFrom, eventTo, Task.TaskType.EVENT, false);
                 taskHandler.addTask(event);
             }
-            case "delete" -> {
+            case DELETE -> {
                 if (taskHandler.getNumberOfTasks() == INVALID_SIZE) {
                     throw new LokwxException("Oops! please add a task before deleting!");
                 }
@@ -212,7 +207,6 @@ public final class InputCommandHandler {
                 // Convert the displayed task number to the index expected by TaskHandler.
                 taskHandler.removeTask(indexToDelete - ZERO_BASED);
             }
-            default -> throw new LokwxException("Oops! I'm sorry, but I don't understand what you mean.");
         }
     }
 

@@ -17,7 +17,9 @@ import java.time.format.ResolverStyle;
 import java.util.List;
 
 /**
- * Parses user input and routes to the appropriate task and echo actions.
+ * Interprets one line of user input and executes the corresponding Lokwx command.
+ * Supports task creation, listing, searching, completion updates, deletion, and chatbot termination.
+ * Commands that modify tasks are delegated to {@link TaskHandler}, which persists the updated task list.
  */
 public final class InputCommandHandler {
 
@@ -26,18 +28,24 @@ public final class InputCommandHandler {
     private static final String DELIMITER_TO = "/to";
     private static final int INDEX_NOT_FOUND = -1;
     /**
-     * Defines the number of tasks in an empty task list.
+     * Represents the task count used to identify an empty task list before deletion.
      */
     public static final int INVALID_SIZE = 0;
     private static final int MINIMUM_INDEX = 0;
     private static final int MIN_ARGUMENT_COUNT = 2;
+    /**
+     * Defines the strict date-time formats accepted for deadline commands.
+     */
     private static final List<DateTimeFormatter> DEADLINE_DATE_TIME_FORMATTERS = List.of(
             DateTimeFormatter.ofPattern("d/M/uuuu HHmm").withResolverStyle(ResolverStyle.STRICT),
             DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm").withResolverStyle(ResolverStyle.STRICT));
+    /**
+     * Defines the strict ISO date format accepted for deadlines without a specified time.
+     */
     private static final DateTimeFormatter DEADLINE_DATE_FORMATTER =
             DateTimeFormatter.ISO_LOCAL_DATE.withResolverStyle(ResolverStyle.STRICT);
     /**
-     * Defines the offset subtracted from a displayed task number to obtain a zero-based list index.
+     * Defines the offset for converting a one-based displayed task number to a zero-based list index.
      */
     public static final int ZERO_BASED = 1;
 
@@ -48,17 +56,19 @@ public final class InputCommandHandler {
     }
 
     /**
-     * Processes one line of user input as a chatbot command.
-     * Validates command arguments before delegating task updates and console output.
+     * Validates and executes one complete user command.
+     * Task numbers in {@code mark}, {@code unmark}, and {@code delete} commands are interpreted as one-based.
+     * The {@code todo}, {@code deadline}, {@code event}, {@code mark}, {@code unmark}, and {@code delete}
+     * commands update the supplied task handler and save its task list.
      *
-     * @param input User input to process.
-     * @param taskHandler Task handler that holds the current tasks.
-     * @throws LokwxException If input is empty or unknown, an operation requires a nonempty list,
-     *         or a delete task number fails the range check.
-     * @throws IllegalArgumentException If command syntax, format, or argument values are invalid.
-     * @throws IndexOutOfBoundsException If a referenced task number is outside the valid range,
-     *         a delete task number is missing, or required time delimiters are missing or out of order.
-     * @throws IOException If a task update cannot be saved.
+     * @param input Complete command line entered by the user.
+     * @param taskHandler Task collection on which the command operates.
+     * @throws LokwxException If the command is empty or unknown, a list or delete operation requires tasks,
+     *         or the task number supplied to {@code delete} is outside the displayed list.
+     * @throws IllegalArgumentException If a required description, keyword, time, or numeric argument is invalid.
+     * @throws IndexOutOfBoundsException If a mark or unmark task number is outside the displayed list,
+     *         a delete task number is missing, or an event or deadline delimiter is missing or misplaced.
+     * @throws IOException If a command that changes the task list cannot persist the updated data.
      */
     public static void handleInputCommand(String input, TaskHandler taskHandler)
             throws LokwxException, IllegalArgumentException, IndexOutOfBoundsException, IOException {
@@ -215,12 +225,12 @@ public final class InputCommandHandler {
     }
 
     /**
-     * Parses a deadline in one of the date formats supported by the chatbot.
-     * A date without a time is stored as midnight so every deadline has one consistent Java type.
+     * Parses deadline text using {@code d/M/yyyy HHmm}, {@code yyyy-MM-dd HHmm}, or {@code yyyy-MM-dd}.
+     * Converts a date without an explicit time to the start of that day at 00:00.
      *
-     * @param deadlineText Date and optional time entered after the {@code /by} delimiter.
-     * @return Parsed deadline date and time.
-     * @throws IllegalArgumentException If the text does not represent a valid supported date.
+     * @param deadlineText Date and optional time following the {@code /by} delimiter.
+     * @return Strictly validated deadline represented as a date and time.
+     * @throws IllegalArgumentException If the text does not match a supported format or contains an invalid date.
      */
     private static LocalDateTime parseDeadline(String deadlineText) {
         for (DateTimeFormatter formatter : DEADLINE_DATE_TIME_FORMATTERS) {

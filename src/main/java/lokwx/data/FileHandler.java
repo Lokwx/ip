@@ -10,6 +10,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,13 +95,23 @@ public final class FileHandler {
         String description = fields[DESCRIPTION_INDEX];
 
         return switch (fields[TASK_TYPE_INDEX]) {
-        case "T" -> new Todo(description, Task.TaskType.TODO, isDone);
-        case "D" -> new Deadline(description, getField(fields, DEADLINE_BY_INDEX, lineNumber),
-                Task.TaskType.DEADLINE, isDone);
-        case "E" -> new Event(description, getField(fields, EVENT_FROM_INDEX, lineNumber),
-                getField(fields, EVENT_TO_INDEX, lineNumber), Task.TaskType.EVENT, isDone);
-        default -> throw corruptedFileException(lineNumber, "an unknown task type");
+            case "T" -> new Todo(description, Task.TaskType.TODO, isDone);
+            case "D" -> new Deadline(description, parseDeadline(fields, lineNumber),
+                    Task.TaskType.DEADLINE, isDone);
+            case "E" -> new Event(description, getField(fields, EVENT_FROM_INDEX, lineNumber),
+                    getField(fields, EVENT_TO_INDEX, lineNumber), Task.TaskType.EVENT, isDone);
+            default -> throw corruptedFileException(lineNumber, "an unknown task type");
         };
+    }
+
+    private static LocalDateTime parseDeadline(String[] fields, int lineNumber) throws IOException {
+        String deadlineText = getField(fields, DEADLINE_BY_INDEX, lineNumber);
+
+        try {
+            return LocalDateTime.parse(deadlineText);
+        } catch (DateTimeParseException e) {
+            throw corruptedFileException(lineNumber, "an invalid deadline date");
+        }
     }
 
     private static boolean parseDoneStatus(String status, int lineNumber) throws IOException {
@@ -134,7 +146,8 @@ public final class FileHandler {
         }
 
         if (task instanceof Deadline deadline) {
-            return String.join(FIELD_DELIMITER, "D", isDone, task.getDescription(), deadline.getDeadlineBy());
+            return String.join(FIELD_DELIMITER, "D", isDone, task.getDescription(),
+                    deadline.getDeadlineBy().toString());
         }
 
         if (task instanceof Event event) {

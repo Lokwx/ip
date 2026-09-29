@@ -9,6 +9,12 @@ import lokwx.task.Todo;
 import lokwx.ui.Echo;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
+import java.util.List;
 
 /**
  * Parses user input and routes to the appropriate task and echo actions.
@@ -22,6 +28,11 @@ public final class InputCommandHandler {
     public static final int INVALID_SIZE = 0;
     private static final int MINIMUM_INDEX = 0;
     private static final int MIN_ARGUMENT_COUNT = 2;
+    private static final List<DateTimeFormatter> DEADLINE_DATE_TIME_FORMATTERS = List.of(
+            DateTimeFormatter.ofPattern("d/M/uuuu HHmm").withResolverStyle(ResolverStyle.STRICT),
+            DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm").withResolverStyle(ResolverStyle.STRICT));
+    private static final DateTimeFormatter DEADLINE_DATE_FORMATTER =
+            DateTimeFormatter.ISO_LOCAL_DATE.withResolverStyle(ResolverStyle.STRICT);
     /**
      * Defines the offset subtracted from a displayed task number to obtain a zero-based list index.
      */
@@ -128,12 +139,13 @@ public final class InputCommandHandler {
                     throw new IllegalArgumentException("Oops! The description of a deadline cannot be empty!");
                 }
 
-                String deadlineBy = trimmedInput.substring(byIndex + DELIMITER_BY.length()).trim();
+                String deadlineText = trimmedInput.substring(byIndex + DELIMITER_BY.length()).trim();
 
-                if (deadlineBy.isEmpty()) {
+                if (deadlineText.isEmpty()) {
                     throw new IllegalArgumentException("Oops! You need to set a deadline!");
                 }
 
+                LocalDateTime deadlineBy = parseDeadline(deadlineText);
                 Deadline deadline = new Deadline(description, deadlineBy, Task.TaskType.DEADLINE, false);
                 taskHandler.addTask(deadline);
             }
@@ -192,6 +204,31 @@ public final class InputCommandHandler {
                 taskHandler.removeTask(indexToDelete - ZERO_BASED);
             }
             default -> throw new LokwxException("Oops! I'm sorry, but I don't understand what you mean.");
+        }
+    }
+
+    /**
+     * Parses a deadline in one of the date formats supported by the chatbot.
+     * A date without a time is stored as midnight so every deadline has one consistent Java type.
+     *
+     * @param deadlineText Date and optional time entered after the {@code /by} delimiter.
+     * @return Parsed deadline date and time.
+     * @throws IllegalArgumentException If the text does not represent a valid supported date.
+     */
+    private static LocalDateTime parseDeadline(String deadlineText) {
+        for (DateTimeFormatter formatter : DEADLINE_DATE_TIME_FORMATTERS) {
+            try {
+                return LocalDateTime.parse(deadlineText, formatter);
+            } catch (DateTimeParseException ignored) {
+                // Try the next supported format.
+            }
+        }
+
+        try {
+            return LocalDate.parse(deadlineText, DEADLINE_DATE_FORMATTER).atStartOfDay();
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException(
+                    "Oops! Enter the deadline as d/M/yyyy HHmm, yyyy-MM-dd HHmm, or yyyy-MM-dd.");
         }
     }
 }

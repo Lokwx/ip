@@ -6,6 +6,7 @@ import lokwx.ui.Echo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Manages the collection of tasks and performs operations on them.
@@ -75,6 +76,26 @@ public class TaskHandler {
      */
     public void printAllTasks() {
         Echo.printList(new ArrayList<>(tasks), tasks.size());
+    }
+
+    /**
+     * Prints tasks whose descriptions contain the specified keyword.
+     * The search ignores letter case so users do not need to match the original capitalization.
+     *
+     * @param keyword Keyword to search for in task descriptions.
+     */
+    public void printMatchingTasks(String keyword) {
+        List<Task> matchingTasks = new ArrayList<>();
+        String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
+
+        for (Task task : tasks) {
+            String normalizedDescription = task.getDescription().toLowerCase(Locale.ROOT);
+            if (normalizedDescription.contains(normalizedKeyword)) {
+                matchingTasks.add(task);
+            }
+        }
+
+        Echo.printMatchingTasks(matchingTasks);
     }
 
     /**

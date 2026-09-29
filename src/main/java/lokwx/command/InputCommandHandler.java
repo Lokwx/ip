@@ -75,6 +75,15 @@ public final class InputCommandHandler {
                 }
                 taskHandler.printAllTasks();
             }
+            case "find" -> {
+                String keyword = input.trim().substring("find".length()).trim();
+
+                if (keyword.isEmpty()) {
+                    throw new IllegalArgumentException("Oops! Please enter a keyword to find.");
+                }
+
+                taskHandler.printMatchingTasks(keyword);
+            }
             case "mark" -> {
                 if (inputCommands.length < MIN_ARGUMENT_COUNT || inputCommands[1].isEmpty()) {
                     throw new IllegalArgumentException("Oops! Please specify a task number to mark.");

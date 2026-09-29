@@ -3,6 +3,7 @@ package lokwx.ui;
 import lokwx.task.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handles formatting and printing chatbot output to the console.
@@ -24,6 +25,26 @@ public final class Echo {
         for (int i = 0; i < numberOfTasks; i++) {
             System.out.printf("%d. %s\n", i + 1, tasks.get(i).displayTask());
         }
+        printRobot(Robot.ROBOT_LIST);
+    }
+
+    /**
+     * Prints tasks that match a search keyword.
+     *
+     * @param matchingTasks Tasks whose descriptions contain the search keyword.
+     */
+    public static void printMatchingTasks(List<Task> matchingTasks) {
+        System.out.println();
+
+        if (matchingTasks.isEmpty()) {
+            System.out.println("No matching tasks found.");
+        } else {
+            System.out.println("Here are the matching tasks in your list:");
+            for (int i = 0; i < matchingTasks.size(); i++) {
+                System.out.printf("%d. %s\n", i + 1, matchingTasks.get(i).displayTask());
+            }
+        }
+
         printRobot(Robot.ROBOT_LIST);
     }
 

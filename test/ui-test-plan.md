@@ -436,7 +436,7 @@ deadline return book /by 2/12/2019 1800
 ```text
 
 Got it. I've added this deadline:
-[D][ ] return book (by: Dec 02 2019, 6:00PM)
+[D][ ] return book (by: Dec 02 2019, 6:00 PM)
 Now you have 1 task in this list.
 
    ^^^^^
@@ -519,7 +519,7 @@ list
 
 ```text
 
-1. [D][ ] return book (by: Dec 02 2019, 6:00PM)
+1. [D][ ] return book (by: Dec 02 2019, 6:00 PM)
 2. [D][ ] submit report (by: Oct 15 2019)
 
   ?????

@@ -10,7 +10,8 @@
 - Shutdown command: `bye`
 - Comparison rule: Normalize line endings to LF, then compare exactly without trimming.
 - Session rule: Use a fresh Lokwx process for each complete test run unless a test case explicitly requires a different setup.
-- Storage rule: Before each test case, remove `data/lokwx.txt` if it exists. UI-04 removes it only before session A.
+- Storage rule: Before each test case, remove `data/lokwx.txt` if it exists. UI-04, UI-05, and UI-07 remove it
+  only before session A; UI-08 then writes the specified older-format records.
 
 ## Test cases
 
@@ -684,6 +685,260 @@ __________________________________________________
 ```
 
 #### Check 6
+
+**Input command**
+
+```text
+bye
+```
+
+**Expected output**
+
+```text
+
+Bye. Hope to see you again soon!
+
+    o
+   / \
+ .[^_^]./
+  /|o|
+__________________________________________________
+```
+
+### UI-07: Save and reload text containing a pipe
+
+**Aim:** Verify that todos, deadlines, and events preserve `|` in task descriptions and event times after restarting.
+
+**Setup:** Remove `data/lokwx.txt`. Launch fresh session A for checks 1-4, then launch fresh session B for checks 5-6.
+
+#### Check 1
+
+**Input command**
+
+```text
+todo A|B
+```
+
+**Expected output**
+
+```text
+
+Got it. I've added this Todo:
+[T][ ] A|B
+Now you have 1 task in this list.
+
+   ^^^^^
+ \.[^_^]./
+    |o|
+__________________________________________________
+```
+
+#### Check 2
+
+**Input command**
+
+```text
+deadline read | write /by 2026-10-02
+```
+
+**Expected output**
+
+```text
+
+Got it. I've added this deadline:
+[D][ ] read | write (by: Oct 02 2026)
+Now you have 2 tasks in this list.
+
+   ^^^^^
+ \.[^_^]./
+    |o|
+__________________________________________________
+```
+
+#### Check 3
+
+**Input command**
+
+```text
+event discuss | plan /from 2|3pm /to 4|5pm
+```
+
+**Expected output**
+
+```text
+
+Got it. I've added this event:
+[E][ ] discuss | plan (from: 2|3pm to: 4|5pm)
+Now you have 3 tasks in this list.
+
+   ^^^^^
+ \.[^_^]./
+    |o|
+__________________________________________________
+```
+
+#### Check 4
+
+**Input command**
+
+```text
+bye
+```
+
+**Expected output**
+
+```text
+
+Bye. Hope to see you again soon!
+
+    o
+   / \
+ .[^_^]./
+  /|o|
+__________________________________________________
+```
+
+#### Check 5
+
+**Input command**
+
+```text
+list
+```
+
+**Expected output**
+
+```text
+
+1. [T][ ] A|B
+2. [D][ ] read | write (by: Oct 02 2026)
+3. [E][ ] discuss | plan (from: 2|3pm to: 4|5pm)
+
+  ?????
+ .[o_o].
+  /|o|\
+__________________________________________________
+```
+
+#### Check 6
+
+**Input command**
+
+```text
+bye
+```
+
+**Expected output**
+
+```text
+
+Bye. Hope to see you again soon!
+
+    o
+   / \
+ .[^_^]./
+  /|o|
+__________________________________________________
+```
+
+### UI-08: Load and migrate older tasks containing pipes
+
+**Aim:** Verify that older todo and deadline descriptions containing `|` load intact and survive saving in the new
+format.
+
+**Setup:** Write the following lines to `data/lokwx.txt`. Launch fresh session A for checks 1-3, then launch fresh
+session B for checks 4-5.
+
+```text
+T|0|A|B
+D|1|read | write|2026-10-02T00:00
+```
+
+#### Check 1
+
+**Input command**
+
+```text
+list
+```
+
+**Expected output**
+
+```text
+
+1. [T][ ] A|B
+2. [D][X] read | write (by: Oct 02 2026)
+
+  ?????
+ .[o_o].
+  /|o|\
+__________________________________________________
+```
+
+#### Check 2
+
+**Input command**
+
+```text
+mark 1
+```
+
+**Expected output**
+
+```text
+
+Nice! I've marked this task as done:
+[X] A|B
+
+   ^+^
+ .[^_-].
+  /|o|\
+__________________________________________________
+```
+
+#### Check 3
+
+**Input command**
+
+```text
+bye
+```
+
+**Expected output**
+
+```text
+
+Bye. Hope to see you again soon!
+
+    o
+   / \
+ .[^_^]./
+  /|o|
+__________________________________________________
+```
+
+#### Check 4
+
+**Input command**
+
+```text
+list
+```
+
+**Expected output**
+
+```text
+
+1. [T][X] A|B
+2. [D][X] read | write (by: Oct 02 2026)
+
+  ?????
+ .[o_o].
+  /|o|\
+__________________________________________________
+```
+
+#### Check 5
 
 **Input command**
 

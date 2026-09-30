@@ -278,6 +278,7 @@ need to save manually.
 
 Data is stored in `data/lokwx.txt`, relative to the folder from which you run Lokwx. The file is created automatically
 and saved tasks are loaded the next time Lokwx starts from the same folder.
+Task descriptions and event times can contain `|`; Lokwx preserves that character when saving and loading tasks.
 
 > **Caution:** Avoid editing `data/lokwx.txt` manually. An invalid task type, completion status, deadline, or field
 > layout can prevent the saved tasks from loading. If you must edit it, make a backup first.
@@ -309,9 +310,7 @@ Yes. Event start and end values are free-form text. Deadline dates, however, mus
    from the full `list` output.
 2. Event start and end values are stored as text and are not checked as dates or compared to ensure that the end occurs
    after the start.
-3. Avoid using the `|` character in task descriptions or event times because it is used internally to separate fields in
-   the data file.
-4. If `data/lokwx.txt` is corrupted, Lokwx reports the affected line and may be unable to load saved tasks until the
+3. If `data/lokwx.txt` is corrupted, Lokwx reports the affected line and may be unable to load saved tasks until the
    file is repaired or replaced with a backup.
 
 ---

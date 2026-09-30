@@ -2,6 +2,7 @@ package lokwx.data;
 
 import lokwx.task.Deadline;
 import lokwx.task.Event;
+import lokwx.task.LegacyDeadline;
 import lokwx.task.Task;
 import lokwx.task.TaskHandler;
 import lokwx.task.Todo;
@@ -11,8 +12,11 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -34,6 +38,11 @@ public final class FileHandler {
     private static final int DEADLINE_BY_INDEX = 3;
     private static final int EVENT_FROM_INDEX = 3;
     private static final int EVENT_TO_INDEX = 4;
+    private static final List<DateTimeFormatter> DEADLINE_DATE_TIME_FORMATTERS = List.of(
+            DateTimeFormatter.ofPattern("d/M/uuuu HHmm").withResolverStyle(ResolverStyle.STRICT),
+            DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm").withResolverStyle(ResolverStyle.STRICT));
+    private static final DateTimeFormatter DEADLINE_DATE_FORMATTER =
+            DateTimeFormatter.ISO_LOCAL_DATE.withResolverStyle(ResolverStyle.STRICT);
 
     private FileHandler() {
     }
@@ -64,6 +73,10 @@ public final class FileHandler {
 
         for (int lineIndex = 0; lineIndex < lines.size(); lineIndex++) {
             String line = lines.get(lineIndex);
+
+            if (lineIndex == 0 && line.startsWith("\uFEFF")) {
+                line = line.substring(1);
+            }
 
             if (!line.isBlank()) {
                 loadedTasks.add(createTask(line, lineIndex + 1));
@@ -132,8 +145,7 @@ public final class FileHandler {
                 String description = isEncoded
                         ? decodeText(fields[DESCRIPTION_INDEX], lineNumber)
                         : joinDescription(fields, deadlineIndex);
-                yield new Deadline(description, parseDeadline(fields[deadlineIndex], lineNumber),
-                        Task.TaskType.DEADLINE, isDone);
+                yield createDeadline(description, fields[deadlineIndex], isDone, lineNumber);
             }
             case "E" -> {
                 if (fields.length != EVENT_TO_INDEX + 1) {
@@ -148,11 +160,41 @@ public final class FileHandler {
         };
     }
 
-    private static LocalDateTime parseDeadline(String deadlineText, int lineNumber) throws IOException {
+    private static Task createDeadline(String description, String deadlineText, boolean isDone,
+            int lineNumber) throws IOException {
+        if (deadlineText.isBlank()) {
+            throw corruptedFileException(lineNumber, "an invalid deadline date");
+        }
+
+        LocalDateTime deadlineDate = parseDeadline(deadlineText);
+
+        if (deadlineDate != null) {
+            return new Deadline(description, deadlineDate, Task.TaskType.DEADLINE, isDone);
+        }
+
+        return new LegacyDeadline(description, deadlineText, isDone);
+    }
+
+    private static LocalDateTime parseDeadline(String deadlineText) {
         try {
             return LocalDateTime.parse(deadlineText);
-        } catch (DateTimeParseException e) {
-            throw corruptedFileException(lineNumber, "an invalid deadline date");
+        } catch (DateTimeParseException ignored) {
+            // Try supported non-ISO formats.
+        }
+
+        for (DateTimeFormatter formatter : DEADLINE_DATE_TIME_FORMATTERS) {
+            try {
+                return LocalDateTime.parse(deadlineText, formatter);
+            } catch (DateTimeParseException ignored) {
+                // Try the next acceptable pattern.
+            }
+        }
+
+        try {
+            return LocalDate.parse(deadlineText, DEADLINE_DATE_FORMATTER).atStartOfDay();
+        } catch (DateTimeParseException ignored) {
+            // Not a supported date-time format, fall back to legacy free-form text.
+            return null;
         }
     }
 
@@ -232,6 +274,11 @@ public final class FileHandler {
         if (task instanceof Deadline deadline) {
             return String.join(FIELD_DELIMITER, FORMAT_VERSION, "D", isDone, encodeText(task.getDescription()),
                     deadline.getDeadlineBy().toString());
+        }
+
+        if (task instanceof LegacyDeadline legacyDeadline) {
+            return String.join(FIELD_DELIMITER, FORMAT_VERSION, "D", isDone, encodeText(task.getDescription()),
+                    legacyDeadline.getDeadlineText());
         }
 
         if (task instanceof Event event) {
